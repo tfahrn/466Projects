@@ -1,0 +1,172 @@
+['GATA-1']  has support:  1.0
+['Elk-1']  has support:  0.979
+['c-Myc']  has support:  1.0
+['E12']  has support:  1.0
+['RFX2']  has support:  1.0
+['TREB-1']  has support:  0.872
+['c-Jun']  has support:  1.0
+['AP-1']  has support:  1.0
+['ITF-2']  has support:  1.0
+['IBP-1']  has support:  1.0
+['AP-3']  has support:  1.0
+['LBP-1']  has support:  1.0
+['USF']  has support:  1.0
+['GR/PR']  has support:  1.0
+['c-Rel']  has support:  1.0
+['HSF2']  has support:  0.936
+['HSF1_(long)']  has support:  0.979
+['HSF1']  has support:  0.979
+['TCF-1']  has support:  1.0
+['CP2']  has support:  1.0
+['MyoD']  has support:  1.0
+['R1']  has support:  1.0
+['AML1a']  has support:  0.894
+['GHF-1']  has support:  1.0
+['EIIaE-A']  has support:  1.0
+['HSF']  has support:  1.0
+['NF1']  has support:  1.0
+['IUF-1']  has support:  1.0
+['Ets-1']  has support:  0.851
+['p300']  has support:  0.894
+['NF-IL6']  has support:  0.936
+['BSAP']  has support:  1.0
+['USF1']  has support:  1.0
+['GCF']  has support:  1.0
+['Ker-1']  has support:  0.872
+['Tal-1']  has support:  0.936
+['PEA3']  has support:  0.851
+['RXR-alpha']  has support:  0.979
+['R2']  has support:  0.957
+['CP1']  has support:  1.0
+['CBP/CRF']  has support:  0.957
+['PSE1']  has support:  0.915
+['deltaCREB']  has support:  0.915
+['HSF-2']  has support:  0.915
+['E2F-1']  has support:  0.936
+['AP-4']  has support:  0.957
+['EGR2']  has support:  0.936
+['RAR-beta2']  has support:  1.0
+['Oct-4']  has support:  1.0
+['AREB6']  has support:  0.979
+['EF-1A']  has support:  1.0
+['NF-S']  has support:  1.0
+['YY1']  has support:  0.957
+['Elf-1/NTF-1']  has support:  1.0
+['RAR-beta']  has support:  0.894
+['MBF-1']  has support:  1.0
+['LyF-1']  has support:  0.957
+['FOXD3']  has support:  0.979
+['NF-ATx']  has support:  0.979
+['NF-ATc']  has support:  0.957
+['NF-ATc3']  has support:  0.957
+['NF-ATp']  has support:  0.957
+['NF-AT3']  has support:  0.957
+['NF-AT']  has support:  0.957
+['PR']  has support:  0.957
+['E4F']  has support:  1.0
+['HOXA5']  has support:  1.0
+['p53']  has support:  1.0
+['Hlf']  has support:  1.0
+['EGR-1']  has support:  0.915
+['CUTL1']  has support:  1.0
+['MZF-1']  has support:  0.936
+['PU.1']  has support:  0.936
+['ANF']  has support:  1.0
+['Pu-box']  has support:  0.957
+['CBF-A']  has support:  0.872
+['TEF1/GT-IIC']  has support:  0.894
+['SRY']  has support:  0.936
+['HEB']  has support:  1.0
+['LEF-1']  has support:  0.957
+['POU3F1']  has support:  0.915
+['TEF2']  has support:  0.894
+['CBF1']  has support:  0.851
+['HNF-4alpha2']  has support:  0.894
+['GT-IIA']  has support:  0.872
+['NHP-1']  has support:  0.957
+['HiNF-C']  has support:  0.894
+['muEBP-C2']  has support:  0.894
+['IgPE-1']  has support:  0.872
+['SOX-9']  has support:  0.851
+['ARP-1']  has support:  0.681
+['USF-1']  has support:  0.638
+['NF-X3']  has support:  0.617
+['GATA-2']  has support:  0.617
+['MEF-2']  has support:  0.617
+['E1A-F']  has support:  0.617
+['T3R-beta']  has support:  0.617
+['RAR-alpha1']  has support:  0.617
+['Lmo2']  has support:  0.702
+['SAP-1']  has support:  0.66
+['VDR', 'Oct-2']  has support:  0.66
+['ER', 'Myf-5']  has support:  0.617
+['TTF-1', 'ER']  has support:  0.638
+['c-Myb', 'Oct-6']  has support:  0.66
+['Oct-2', 'RAR-gamma']  has support:  0.617
+['T3R-alpha', 'Oct-1']  has support:  0.638
+['ER', 'Oct-2']  has support:  0.681
+['TBP', 'Oct-2']  has support:  0.638
+['c-Myb', 'NRF-2']  has support:  0.617
+['c-Myb', 'TTF-2']  has support:  0.617
+['ER', 'RAR-gamma']  has support:  0.66
+['ER', 'TBP']  has support:  0.617
+['ER', 'TTF-2']  has support:  0.66
+['T3R-alpha', 'Myf-5']  has support:  0.66
+['VDR', 'TTF-2']  has support:  0.617
+['DEF', 'RAR-gamma']  has support:  0.617
+['Oct-2', 'AP-2alpha']  has support:  0.638
+['TTF-2', 'RAR-gamma']  has support:  0.617
+['T3R-alpha', 'TTF-2']  has support:  0.66
+['TTF-1', 'Oct-2']  has support:  0.638
+['ISGF2', 'Oct-1']  has support:  0.66
+['NRF-2', 'TTF-2']  has support:  0.617
+['T3R-alpha', 'ISGF2']  has support:  0.66
+['TTF-1', 'TTF-2']  has support:  0.617
+['TBP', 'E4F1']  has support:  0.638
+['c-Myb', 'VDR']  has support:  0.702
+['c-Myb', 'E4F1']  has support:  0.66
+['ER', 'E4F1']  has support:  0.638
+['VDR', 'RAR-gamma']  has support:  0.638
+['c-Myb', 'Oct-2']  has support:  0.66
+['c-Myb', 'TBP']  has support:  0.681
+['DEF', 'TTF-2']  has support:  0.617
+['T3R-alpha', 'RAR-gamma']  has support:  0.66
+['VDR', 'E4F1']  has support:  0.638
+['T3R-alpha', 'VDR']  has support:  0.617
+['ER', 'Oct-6']  has support:  0.638
+['RAR-gamma', 'Oct-1']  has support:  0.617
+['TTF-2', 'Oct-2']  has support:  0.617
+['VDR', 'Oct-6']  has support:  0.638
+['ER', 'AP-2alpha']  has support:  0.617
+['AP-2alpha', 'E4F1']  has support:  0.617
+['c-Myb', 'Tal-1beta']  has support:  0.617
+['ISGF2', 'RAR-gamma']  has support:  0.617
+['TTF-1', 'Oct-1']  has support:  0.638
+['DEF', 'Oct-1']  has support:  0.638
+['Oct-2', 'Oct-1']  has support:  0.617
+['VDR', 'Tal-1beta']  has support:  0.638
+['c-Myb', 'ER']  has support:  0.638
+['c-Myb', 'RAR-gamma']  has support:  0.638
+['Max1', 'NFAT-1']  has support:  0.638
+['Myf-5', 'RAR-gamma']  has support:  0.617
+['c-Myb', 'DEF']  has support:  0.638
+['ER', 'VDR']  has support:  0.66
+['VDR', 'DEF']  has support:  0.617
+['AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2', 'E2F-2']  has support:  0.617
+['AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2', 'Oct-1']  has support:  0.617
+['NRF-2', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['TTF-2', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2', 'E4F1']  has support:  0.66
+['T3R-alpha', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.638
+['AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2', 'Oct-2']  has support:  0.638
+['AP-2alphaA', 'AP-2alphaB', 'ER', 'AP-2beta', 'AP-2', 'AP-2gamma']  has support:  0.66
+['DEF', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.638
+['Myf-5', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['RAR-gamma', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.638
+['AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2', 'Oct-6']  has support:  0.66
+['TBP', 'VDR', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['VDR', 'AP-2alpha', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['TBP', 'AP-2alpha', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.638
+['c-Myb', 'AP-2alpha', 'AP-2alphaA', 'AP-2alphaB', 'AP-2gamma', 'AP-2beta', 'AP-2']  has support:  0.617
+['NF-YC', 'CP1A', 'CP1C', 'CBF-C', 'NF-YA', 'CBF_(2)', 'COUP', 'CBF-B', 'NF-Y', 'NF-YB']  has support:  0.681
+['STAT3', 'STAT2', 'STAT1beta', 'STAT4', 'STAT5', 'STAT5A', 'STAT5B', 'STAT6', 'STAT1', 'NP-TCII']  has support:  0.638

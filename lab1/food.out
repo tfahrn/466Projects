@@ -1,0 +1,80 @@
+['Chocolate Eclair']  has support:  0.043
+['Vanilla Eclair']  has support:  0.043
+['Almond Tart']  has support:  0.041
+['Apricot Tart']  has support:  0.043
+['Pecan Tart']  has support:  0.042
+['Ganache Cookie']  has support:  0.043
+['Chocolate Meringue']  has support:  0.044
+['Vanilla Meringue']  has support:  0.042
+['Almond Croissant']  has support:  0.042
+['Chocolate Croissant']  has support:  0.045
+['Almond Bear Claw']  has support:  0.044
+['Blueberry Danish']  has support:  0.041
+['Truffle Cake', 'Gongolais Cookie']  has support:  0.043
+['Cheese Croissant', 'Orange Juice']  has support:  0.044
+['Marzipan Cookie', 'Tuile Cookie']  has support:  0.049
+['Napoleon Cake', 'Strawberry Cake']  has support:  0.045
+['Bottled Water', 'Berry Tart']  has support:  0.036
+['Lemon Cake', 'Lemon Tart']  has support:  0.037
+['Blueberry Tart', 'Apricot Croissant', 'Hot Coffee']  has support:  0.033
+['Single Espresso', 'Coffee Eclair', 'Blackberry Tart']  has support:  0.027
+['Chocolate Cake', 'Casino Cake', 'Chocolate Coffee']  has support:  0.034
+['Chocolate Tart', 'Walnut Cookie', 'Vanilla Frappuccino']  has support:  0.028
+['Apricot Danish', 'Cherry Tart', 'Opera Cake']  has support:  0.041
+['Cherry Soda', 'Apple Danish', 'Apple Tart', 'Apple Croissant']  has support:  0.021
+['Hot Coffee', 'Apple Pie', 'Almond Twist', 'Coffee Eclair']  has support:  0.028
+['Raspberry Cookie', 'Lemon Lemonade', 'Raspberry Lemonade', 'Green Tea', 'Lemon Cookie']  has support:  0.02
+rule:  ['Apricot Croissant', 'Hot Coffee'] -->  Blueberry Tart 
+Support: 0.033 Confidence: 0.929
+rule:  ['Blueberry Tart', 'Hot Coffee'] -->  Apricot Croissant 
+Support: 0.033 Confidence: 0.913
+rule:  ['Blueberry Tart', 'Apricot Croissant'] -->  Hot Coffee 
+Support: 0.033 Confidence: 0.779
+rule:  ['Single Espresso', 'Blackberry Tart'] -->  Coffee Eclair 
+Support: 0.027 Confidence: 0.894
+rule:  ['Single Espresso', 'Coffee Eclair'] -->  Blackberry Tart 
+Support: 0.027 Confidence: 0.92
+rule:  ['Casino Cake', 'Chocolate Coffee'] -->  Chocolate Cake 
+Support: 0.034 Confidence: 0.95
+rule:  ['Chocolate Cake', 'Chocolate Coffee'] -->  Casino Cake 
+Support: 0.034 Confidence: 0.77
+rule:  ['Chocolate Cake', 'Casino Cake'] -->  Chocolate Coffee 
+Support: 0.034 Confidence: 0.946
+rule:  ['Walnut Cookie', 'Vanilla Frappuccino'] -->  Chocolate Tart 
+Support: 0.028 Confidence: 0.913
+rule:  ['Chocolate Tart', 'Vanilla Frappuccino'] -->  Walnut Cookie 
+Support: 0.028 Confidence: 0.769
+rule:  ['Chocolate Tart', 'Walnut Cookie'] -->  Vanilla Frappuccino 
+Support: 0.028 Confidence: 0.925
+rule:  ['Cherry Tart', 'Opera Cake'] -->  Apricot Danish 
+Support: 0.041 Confidence: 0.939
+rule:  ['Opera Cake', 'Apricot Danish'] -->  Cherry Tart 
+Support: 0.041 Confidence: 0.946
+rule:  ['Cherry Tart', 'Apricot Danish'] -->  Opera Cake 
+Support: 0.041 Confidence: 0.78
+rule:  ['Apple Danish', 'Apple Tart', 'Apple Croissant'] -->  Cherry Soda 
+Support: 0.021 Confidence: 0.808
+rule:  ['Cherry Soda', 'Apple Tart', 'Apple Croissant'] -->  Apple Danish 
+Support: 0.021 Confidence: 0.993
+rule:  ['Cherry Soda', 'Apple Danish', 'Apple Croissant'] -->  Apple Tart 
+Support: 0.021 Confidence: 0.988
+rule:  ['Cherry Soda', 'Apple Danish', 'Apple Tart'] -->  Apple Croissant 
+Support: 0.021 Confidence: 0.995
+rule:  ['Apple Pie', 'Almond Twist', 'Coffee Eclair'] -->  Hot Coffee 
+Support: 0.028 Confidence: 0.823
+rule:  ['Almond Twist', 'Hot Coffee', 'Coffee Eclair'] -->  Apple Pie 
+Support: 0.028 Confidence: 0.998
+rule:  ['Apple Pie', 'Hot Coffee', 'Coffee Eclair'] -->  Almond Twist 
+Support: 0.028 Confidence: 0.996
+rule:  ['Almond Twist', 'Apple Pie', 'Hot Coffee'] -->  Coffee Eclair 
+Support: 0.028 Confidence: 0.995
+rule:  ['Lemon Lemonade', 'Raspberry Lemonade', 'Green Tea', 'Lemon Cookie'] -->  Raspberry Cookie 
+Support: 0.02 Confidence: 0.998
+rule:  ['Lemon Cookie', 'Raspberry Lemonade', 'Green Tea', 'Raspberry Cookie'] -->  Lemon Lemonade 
+Support: 0.02 Confidence: 1.0
+rule:  ['Lemon Lemonade', 'Lemon Cookie', 'Green Tea', 'Raspberry Cookie'] -->  Raspberry Lemonade 
+Support: 0.02 Confidence: 1.0
+rule:  ['Lemon Lemonade', 'Raspberry Lemonade', 'Lemon Cookie', 'Raspberry Cookie'] -->  Green Tea 
+Support: 0.02 Confidence: 0.802
+rule:  ['Lemon Lemonade', 'Raspberry Lemonade', 'Green Tea', 'Raspberry Cookie'] -->  Lemon Cookie 
+Support: 0.02 Confidence: 0.998
