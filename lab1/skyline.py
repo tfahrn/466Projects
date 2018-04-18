@@ -188,7 +188,7 @@ def report_rules(maxRules,labels, shift):
         new_left = []
         for item in left:
             new_left.append(labels[item+shift])
-        new_right = labels[rule[1]]
+        new_right = labels[rule[1]+shift]
         translated.append([new_left,new_right])
     return translated
 
@@ -354,8 +354,6 @@ def getGeneFactors(filename):
     for row in df['transfac'][1:]:
         factors.append(row)
     
-
-    print(factors)
     return factors
 
 
