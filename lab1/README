@@ -1,14 +1,14 @@
 Names: James Abundis and Thomas Fahrner
 Instructions on running code:
-python3 skyline.py [market_basket.csv] [minsup] [minconf OR factors.csv] [goods.csv OR authorlist.csv]
+python3 skyline.py [market_basket.csv] [minsup] [minconf OR factors.csv] [goods.csv OR authorlist.psv]
 
 market_basket.csv must be one of {1000i.csv, 5000i.csv, 20000i.csv, 75000i.csv, bingoBaskets.csv, factor_baskets_full.csv}
 
 If one of {1000i.csv, 5000i.csv, 20000i.csv, 75000i.csv} is supplied, then minsup, minconf and goods.csv are given 
 eg. python3 skyline.py 1000i.csv 0.3 0.5 goods.csv
 
-If bingoBaskets.csv is given, then minsup, minconf, and authorlist.csv are given
-eg. python3 skyline.py bingoBaskets.csv 0.3 0.5 authorlist.csv
+If bingoBaskets.csv is given, then minsup, minconf, and authorlist.psv are given
+eg. python3 skyline.py bingoBaskets.csv 0.3 0.5 authorlist.psv
 
 If factor_baskets_full.csv is given, then minsup and factors.csv are given
 eg. python3 skyline.py factor_baskets_full.csv 0.6 factors.csv

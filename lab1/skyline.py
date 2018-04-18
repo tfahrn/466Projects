@@ -181,13 +181,13 @@ def get_goods(filename):
 # In[197]:
 
 
-def report_rules(maxRules,labels):
+def report_rules(maxRules,labels, shift):
     translated = []
     for rule in maxRules:
         left = list(rule[0])
         new_left = []
         for item in left:
-            new_left.append(labels[item])
+            new_left.append(labels[item+shift])
         new_right = labels[rule[1]]
         translated.append([new_left,new_right])
     return translated
@@ -196,12 +196,12 @@ def report_rules(maxRules,labels):
 # In[198]:
 
 
-def report_itemsets(maxItemsets,labels):
+def report_itemsets(maxItemsets,labels, shift):
     translated = []
     for itemset in maxItemsets:
         new_itemset = []
         for item in list(itemset):
-            new_itemset.append(labels[item])
+            new_itemset.append(labels[item+shift])
         translated.append(new_itemset)
     return translated
             
@@ -220,10 +220,10 @@ def bakery_main(filename, goodsfile, minsup, minconf):
     CONFIDENCE = minconf 
     (frequent_itemsets, special_itemsets) = apriori(mbs.values(),itemsets, SUPPORT, MAX_SUPPORT)
     maximal_itemsets = maximal(frequent_itemsets)
-    labeled_itemsets = report_itemsets(maximal_itemsets,goods)
+    labeled_itemsets = report_itemsets(maximal_itemsets,goods, 0)
     #Optimal confidence and support will make 10-50 maximal rules
     maximal_rules = genRules(mbs.values(), maximal_itemsets, CONFIDENCE)
-    labeled_rules = report_rules(maximal_rules,goods)
+    labeled_rules = report_rules(maximal_rules,goods, 0)
     
     #Report itemsets and supports
     for i in range(len(maximal_itemsets)):
@@ -278,9 +278,9 @@ def bingo_main(bingofile, authorfile, minsup, minconf):
     CONFIDENCE = minconf 
     (frequent_itemsets, special_itemsets) = apriori(baskets,itemsets, SUPPORT, MAX_SUPPORT)
     maximal_itemsets = maximal(frequent_itemsets)
-    labeled_itemsets = report_itemsets(maximal_itemsets,authors)
+    labeled_itemsets = report_itemsets(maximal_itemsets,authors, -1)
     maximal_rules = genRules(baskets, maximal_itemsets, CONFIDENCE)
-    labeled_rules = report_rules(maximal_rules,authors)
+    labeled_rules = report_rules(maximal_rules,authors, -1)
     
     #Report itemsets and supports
     for i in range(len(maximal_itemsets)):
@@ -354,6 +354,8 @@ def getGeneFactors(filename):
     for row in df['transfac'][1:]:
         factors.append(row)
     
+
+    print(factors)
     return factors
 
 
@@ -375,10 +377,10 @@ def gene_main(basketfile, factorfile, minsup):
     MAX_SUPPORT = 0.85
     (frequent_itemsets, special_itemsets) = apriori(mbs.values(),itemsets, SUPPORT, MAX_SUPPORT)
     maximal_itemsets = maximal(frequent_itemsets)
-    labeled_itemsets = report_itemsets(maximal_itemsets,factors)
+    labeled_itemsets = report_itemsets(maximal_itemsets,factors,-1)
 
     """
-    labeled_special = report_itemsets(special_itemsets, factors)
+    labeled_special = report_itemsets(special_itemsets, factors,-1)
     for i in range(len(special_itemsets)):
         support = getSupport(special_itemsets[i], mbs.values())
         print(labeled_special[i], " has support: ", round(support,3))
