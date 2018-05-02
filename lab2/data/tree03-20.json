@@ -1,0 +1,37 @@
+{
+     "name": "Bush Approval",
+       "children": [
+              {
+                       "name": "Religion",
+                             "edge": "Disapprove",
+                                   "children": [
+                                              {
+                                                           "name": "Obama",
+                                                                     "edge": "Protestant"
+                                                                             },
+                                                                                     {
+                                                                                                  "name": "Gender",
+                                                                                                            "edge": "Catholic",
+                                                                                                                      "children": [
+                                                                                                                                     {
+                                                                                                                                                      "name": "McCain",
+                                                                                                                                                                    "edge": "Male"
+                                                                                                                                                                                },
+                                                                                                                                                                                            {
+                                                                                                                                                                                                             "name": "Obama",
+                                                                                                                                                                                                                           "edge": "Female"
+                                                                                                                                                                                                                                       }
+                                                                                                                                                                                                                                                 ]
+                                                                                                                                                                                                                                                         },
+                                                                                                                                                                                                                                                                 {
+                                                                                                                                                                                                                                                                              "name": "McCain",
+                                                                                                                                                                                                                                                                                        "edge": "Other"
+                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                      ]
+                                                                                                                                                                                                                                                                                                          },
+                                                                                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                                                                                       "name": "McCain",
+                                                                                                                                                                                                                                                                                                                             "edge": "Approve"
+                                                                                                                                                                                                                                                                                                                                 }
+                                                                                                                                                                                                                                                                                                                                   ]
+}

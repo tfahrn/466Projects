@@ -1,0 +1,10 @@
+Classify.py:
+To run: python3 Classify.py x y
+x: path to csv file of entries to classify
+y: path to json file of decision tree
+
+Validate.py:
+To run: python3 Validate.py x n z 
+x: path to csv file of entries to classify
+n: number of folds for cross-validation
+z: path to optional restrictions file
