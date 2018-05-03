@@ -3,6 +3,8 @@ import numpy as np
 import math
 from anytree import Node, RenderTree
 from anytree.exporter import JsonExporter
+import sys
+import argparse
 
 
 # returns tuple: (most frequent class in D, there is only one class in D)
@@ -11,7 +13,6 @@ def get_most_freq_class(D, c_name):
     class_to_freq = {}
     
     for data in class_values:
-        #TODO: find class
         class_val = data
 
         if class_val in class_to_freq:
@@ -35,56 +36,82 @@ def get_most_freq_class(D, c_name):
 
 # uses information gain
 # returns attr with largest gain else None if all gain < threshold
-def select_split_attr_reg(D, A,c_name,threshold):
+def select_split_attr(D, A, c_name, threshold, use_ratio, is_cont):
     
-    #TODO: build get_entropy()
-    #Get entropy of the data set, pass in the class column name
-    entropy = entropy_d(D[c_name])
+    entropy = entropy_dataset(D, c_name)
     max_gain = threshold
     best_attr = None
+    best_split_value = 0
 
     for attr in A:
-        #TODO: build get_entropy()
-        #We are doing a groupby by the attribute and getting
-        #a dataframe with the class frequencies
-        SD = D.groupby([attr,c_name]).size().to_frame()
-        SD.reset_index(inplace=True)
-        SD.rename(columns = {0:"count"},inplace = True)
-        #Entropy of the attribute
-        entropy_of_split = entropy_a(SD, attr)
-        gain = entropy - entropy_of_split
+        if is_cont:
+            entropy_of_attr, split_value = entropy_attr_cont(D, c_name, attr)
+        else:
+            entropy_of_attr = entropy_attr(D, c_name, attr)
+        gain = entropy - entropy_of_attr
+
+        if use_ratio:
+            if entropy_of_attr == 0.0:
+                gain = sys.maxsize
+            else:
+                gain = gain/entropy_of_attr
         
         if gain > max_gain:
             max_gain = gain
             best_attr = attr
+            best_split_value = split_value
 
-    return best_attr
+    #print(best_attr, best_split_value)
+    return best_attr, best_split_value
 
-# uses information gain ratio
-def select_split_attr_ratio(D, A, c_name, threshold):
+def entropy_dataset(df, category_variable):
+    entropy = 0
 
-    #TODO: build get_entropy()
-    entropy = entropy_d(D[c_name])
-    max_gainRatio = threshold
-    best_attr = None
+    class_counts = df[category_variable].value_counts().tolist()
+    total_count = np.sum(class_counts)
+    for class_count in class_counts:
+        prob_of_class = class_count/total_count
+        entropy += prob_of_class * math.log(prob_of_class, 2)
+    entropy *= -1
 
-    for attr in A:
-        SD = D.groupby([attr,c_name]).size().to_frame()
-        SD.reset_index(inplace=True)
-        SD.rename(columns = {0:"count"},inplace = True)
-        
-        #TODO: build get_entropy()
-        entropy_of_split = entropy_a(SD, attr)
-        gain = entropy - entropy_of_split
-        gainRatio = gain / entropy_of_split
-        
-        if gainRatio > max_gainRatio:
-            max_gainRatio = gainRatio
-            best_attr = attr
+    return entropy
 
-    return best_attr
+def entropy_attr(df, category_variable, attr):
+    entropy = 0
 
-def build_decision_tree(dataset, attributes, tree, threshold, c_name):
+    value_to_count = df[attr].value_counts().to_dict()
+    total_count = sum(value_to_count.values())
+    for value, count in value_to_count.items():
+        filtered_df = df[df[attr] == value]
+        filtered_entropy = entropy_dataset(filtered_df, category_variable)
+        entropy += filtered_entropy * (count/total_count)
+        #print("filtered_entropy:", filtered_entropy)
+        #print("count/total_count:", count/total_count)
+
+    return entropy
+
+def entropy_attr_cont(df, category_variable, attr):
+    entropy = 0
+
+    value_to_count = df[attr].value_counts().to_dict()
+    total_count = sum(value_to_count.values())
+    cum_count = 0
+    max_entropy = 0
+    max_split = 0
+
+    for value in sorted(value_to_count.keys()):
+        cum_count = value_to_count[value]
+        filtered_df = df[df[attr] <= value] 
+        filtered_entropy = entropy_dataset(filtered_df, category_variable)
+        entropy += filtered_entropy * (cum_count/total_count)
+        if entropy > max_entropy:
+            max_entropy = entropy
+            max_split = value
+
+    #print("max_entropy", max_entropy, "max_split", max_split, "entropy:", entropy)
+    return entropy, max_split
+
+def build_decision_tree(dataset, attributes, tree, threshold, c_name, use_ratio, is_cont):
     most_freq_class, is_only_class = get_most_freq_class(dataset,c_name)
 
     if is_only_class or len(attributes) == 0:
@@ -92,8 +119,7 @@ def build_decision_tree(dataset, attributes, tree, threshold, c_name):
         tree = leaf
         return tree
     else:
-        split_attr = select_split_attr_reg(dataset, attributes,
-                                           c_name,threshold)
+        split_attr, split_value = select_split_attr(dataset, attributes, c_name, threshold, use_ratio, is_cont)
 
         if split_attr is None:
             leaf = Node(most_freq_class)
@@ -104,82 +130,62 @@ def build_decision_tree(dataset, attributes, tree, threshold, c_name):
             
             attr_val_to_data = {}            
             for index,data in dataset.iterrows():
-                # TODO: correct indexing
                 attr_val = data[split_attr]
-
+    
                 if attr_val not in attr_val_to_data:
                     attr_val_to_data[attr_val] = []
                 attr_val_to_data[attr_val].append(data)
             for k, v in attr_val_to_data.items():
-                
-                #new_df = pd.DataFrame(data = v,columns = attributes + [c_name])
-                #print(new_df.columns)
-                child = build_decision_tree(pd.DataFrame(data = v,columns = attributes + [c_name]), 
-                                            [attr for attr in attributes if attr != split_attr],
-                                            None,threshold,c_name)
+                child = build_decision_tree(pd.DataFrame(data = v,
+                    columns = attributes + [c_name]),
+                    [attr for attr in attributes if attr != split_attr],
+                    None,threshold,c_name, use_ratio, is_cont)
                 child.parent = parent
                 child.edge = k
 
             return parent
 
-def setup():
-    y_vars = {}
-    df = pd.read_csv("data/tree01-1000-words.csv",skiprows=[1,2])
-    df.drop("Id",inplace = True,axis = 1)
-    for col in df.columns:
-        y_vars[col] = list(set(df[col]))
-    y_vars
-    return[df,y_vars]
+def get_args():
+    parser = argparse.ArgumentParser(description='Build Decision Tree Input Parameters, see README')
+    parser.add_argument('-x', '--csv', required=True, help="Path to csv file of training entries")
+    parser.add_argument('-z', '--res', required=False, help="Path to optional restrictions file")
 
-def entropy_d(d):
-    freqs = d.value_counts().values
-    tot_n = np.sum(freqs)
-    entropy = 0 
-    #Sums up all of the entropys for each possible value for a given
-    #attribute Ai
-    for f in freqs:
-        entropy += -(f/tot_n)*math.log((f/tot_n),2)
-    return entropy
+    return vars(parser.parse_args())
 
-#D = the original data
-#Di = data subset after the partition/split
-def gain(split_data,a_name,r_list):
-    return entropy_d(r_list) - entropy_a(split_data,a_name)
+def preprocess(csv_file, res_file):
+    is_iris = False
+    with open(csv_file) as f:
+        if "Iris" in f.readline():
+            is_iris = True
+    category_variable = "Class" if is_iris else "Vote"
+    if is_iris:
+        df = pd.read_csv(csv_file, names = ["Sepal Length", "Sepal Width",
+                                            "Pedal Length", "Pedal Width",
+                                            "Class"])
+    else:
+        df = pd.read_csv(csv_file, skiprows=[1,2])
 
-def gain_ratio(df, a_name, resp):   
-    split_data = df[[a_name, resp]]
-    #pd.pivot_table(temp, index = "Education",columns = 'Vote')
-    split_data = split_data.groupby([a_name, resp]).size().to_frame()
-    split_data.reset_index(inplace=True)
-    split_data.rename(columns = {0:"count"},inplace = True)
+    if res_file:
+        with open(res_file) as f:
+            res = f.readline().split(',')
+            cols_to_drop = [i for i in range(len(res)) if int(res[i]) == 0]
+            df.drop(df.columns[cols_to_drop], inplace=True, axis=1)
 
-    edges = list(set(split_data[a_name]))
-    a_sum = 0
-    for edge in edges:
-        edge_df = split_data[split_data[a_name] == edge]
-        prop = np.sum(edge_df['count'])/np.sum(split_data['count'])
-        a_sum += -prop * math.log(prop,2)
-    return gain(split_data,a_name,df[resp])/a_sum
+    if not is_iris:
+        df.drop("Id", inplace=True, axis=1)
 
-def entropy_a(split_data, a_name):
-    edges = list(set(split_data[a_name]))
-    a_sum = 0
-    for edge in edges:
-        edge_df = split_data[split_data[a_name] == edge]
-        prop = np.sum(edge_df['count'])/np.sum(split_data['count'])
-        counts = edge_df['count']
-        entropy_d = 0
-        for c in counts:
-            prop_d = c/np.sum(edge_df['count'])
-            entropy_d += -prop_d * math.log(prop_d,2)   
-        
-        a_sum += prop * entropy_d
-    return a_sum
+    return df, category_variable
 
 if __name__ == '__main__':
-    res = setup()
-    df = res[0]
-    tree = build_decision_tree(df,list(df.columns[:-1]),None,.01,"Vote")
+    args = get_args()
+    csv_file = args['csv']
+    res_file = args['res']
+
+    df, category_variable = preprocess(csv_file, res_file)
+    is_cont = category_variable == "Class"
+    tree = build_decision_tree(df, list(df.columns[:-1]), None, .01,
+                               category_variable, False, is_cont)
+
     exporter = JsonExporter(indent=2)
     print(exporter.export(tree))
     #print(RenderTree(tree))

@@ -1,10 +1,22 @@
+InduceC45.py
+usage: InduceC45.py [-h] -x CSV [-z RES]
+x: path to csv file of training entries
+z: path to optional restrictions file
+
 Classify.py:
-To run: python3 Classify.py x y
+usage: Classify.py [-h] -x CSV -y TREE
 x: path to csv file of entries to classify
 y: path to json file of decision tree
 
 Validate.py:
-To run: python3 Validate.py x n z 
+usage: Validate.py [-h] -x CSV -n NUMFOLDS [-z RES]
 x: path to csv file of entries to classify
 n: number of folds for cross-validation
 z: path to optional restrictions file
+
+RandomForest.py:
+usage: RandomForest.py [-h] -x CSV -m NUMATTR -k NUMDATA -n NUMTREE
+x: path to csv file of training entries
+m: number of attributes for each decision tree
+k: number of data points for each decision tree
+n: number of decision trees to build

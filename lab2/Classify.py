@@ -2,6 +2,8 @@ from anytree.importer import JsonImporter
 from anytree import RenderTree
 import pandas as pd
 import sys
+import argparse
+import InduceC45
 
 def tree_from_file(file):
     importer = JsonImporter()
@@ -11,7 +13,7 @@ def tree_from_file(file):
     return root
 
 def get_pred(tree, df, row):
-    if tree.name == "Obama" or tree.name == "McCain":
+    if len(tree.children) == 0:
         return tree.name
     
     split = tree.name
@@ -22,14 +24,7 @@ def get_pred(tree, df, row):
             return get_pred(child, df, row)
 
 def main(csv_file, json_file):
-    """
-    json_file = "data/tree01-1000.json"
-    csv_file = "data/tree01-1000-words.csv"
-    """
-    category_variable = "Vote"
-    
-    df = pd.read_csv(csv_file,skiprows=[1,2])
-    df.drop("Id",inplace = True,axis = 1)
+    df, category_variable = InduceC45.preprocess(csv_file, None)
     tree = tree_from_file(json_file)
     
     preds = []
@@ -37,6 +32,7 @@ def main(csv_file, json_file):
     num_incorrect = 0
     for row in df.itertuples():
         pred = get_pred(tree, df, row)
+        print(row[0:], ",", pred)
         preds.append(pred)
         
         if category_variable in df.columns:
@@ -54,8 +50,15 @@ def main(csv_file, json_file):
         print("Accuracy:", num_correct/(num_correct + num_incorrect))
         print("Error rate:", 1 - num_correct/(num_correct + num_incorrect))
 
+def get_args():
+    parser = argparse.ArgumentParser(description='Random Forest Input Parameters, see README')
+    parser.add_argument('-x', '--csv', required=True, help="Path to csv file of entries to classify")
+    parser.add_argument('-y', '--tree', required=True, help="Path to JSON file of decision tree")
+
+    return vars(parser.parse_args())
+
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        csv_file = sys.argv[1]
-        json_file = sys.argv[2]
-    main(csv_file, json_file)
+    args = get_args()
+    csv_file = args['csv']
+    tree_file = args['tree']
+    main(csv_file, tree_file)
