@@ -23,16 +23,16 @@ def get_pred(tree, df, row):
         if child.edge == row_value:
             return get_pred(child, df, row)
 
-def main(csv_file, json_file):
+def main(csv_file, tree):
     df, category_variable = InduceC45.preprocess(csv_file, None)
-    tree = tree_from_file(json_file)
     
     preds = []
     num_correct = 0
     num_incorrect = 0
     for row in df.itertuples():
         pred = get_pred(tree, df, row)
-        print(row[0:], ",", pred)
+        if __name__ == '__main__':
+            print(row[0:], ",", pred)
         preds.append(pred)
         
         if category_variable in df.columns:
@@ -42,13 +42,7 @@ def main(csv_file, json_file):
             else:
                 num_incorrect += 1
     
-    #print(preds)
-    print("Number of records classified:", len(preds))
-    if category_variable in df.columns:
-        print("Number of records correctly classified:", num_correct)
-        print("Number of records incorrectly classified:", num_incorrect)
-        print("Accuracy:", num_correct/(num_correct + num_incorrect))
-        print("Error rate:", 1 - num_correct/(num_correct + num_incorrect))
+    return preds, num_correct, num_incorrect
 
 def get_args():
     parser = argparse.ArgumentParser(description='Random Forest Input Parameters, see README')
@@ -61,4 +55,13 @@ if __name__ == '__main__':
     args = get_args()
     csv_file = args['csv']
     tree_file = args['tree']
-    main(csv_file, tree_file)
+    tree = tree_from_file(tree_file)
+    
+    preds, num_corrcet, num_incorrect = main(csv_file, tree)
+    
+    print("Number of records classified:", len(preds))
+    if category_variable in df.columns:
+        print("Number of records correctly classified:", num_correct)
+        print("Number of records incorrectly classified:", num_incorrect)
+        print("Accuracy:", num_correct/(num_correct + num_incorrect))
+        print("Error rate:", 1 - num_correct/(num_correct + num_incorrect))

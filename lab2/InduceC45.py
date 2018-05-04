@@ -42,6 +42,7 @@ def select_split_attr(D, A, c_name, threshold, use_ratio, is_cont):
     max_gain = threshold
     best_attr = None
     best_split_value = 0
+    split_value = None
 
     for attr in A:
         if is_cont:

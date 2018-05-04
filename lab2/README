@@ -1,3 +1,9 @@
+Names: James Abundis and Thomas Fahrner
+Emails: jlabundi@calpoly.edu and tfahrner@calpoly.edu
+
+-- For input files use '-words' over '-numbers' --
+-- All output is to stdout --
+
 InduceC45.py
 usage: InduceC45.py [-h] -x CSV [-z RES]
 x: path to csv file of training entries
@@ -20,3 +26,7 @@ x: path to csv file of training entries
 m: number of attributes for each decision tree
 k: number of data points for each decision tree
 n: number of decision trees to build
+
+results.txt:
+Line 1: csv of predictions on tree01-1000-words.csv
+Line 2-5: resultant overall confusion matrix and accuracy from 10-fold validation
