@@ -2,13 +2,14 @@ import argparse
 import re
 import pandas as pd
 import random
+import sys
+import numpy as np
+import itertools
 
 class Datum:
 
-    def __init__(self, position):
+    def __init__(self, position, cluster):
         self.position = position
-
-    def set_cluster(self, cluster):
         self.cluster = cluster
 
 class Cluster:
@@ -17,8 +18,12 @@ class Cluster:
         self.number = number
         self.position = position
 
-    def set_position(self, position):
-        self.position = position
+def get_distance(datum, cluster):
+    datum_position = np.asarray(datum.position)
+    cluster_position = np.asarray(cluster.position)
+    dist = np.linalg.norm(datum_position - cluster_position)
+
+    return dist
 
 def get_restrictions_vector(line):
     one_hot = re.split(',|\n', line)
@@ -61,9 +66,49 @@ def init_data(df):
 
     for i, row in df.iterrows():
         position = [coord for coord in row]
-        data.append(Datum(position))
+        data.append(Datum(position, -1))
 
     return data 
+
+def kmeans(data, clusters, stop_ratio):
+    ratio_moved = 1
+
+    while(ratio_moved > stop_ratio):
+        num_changed = 0
+        cluster_pos_totals = [[]*len(clusters)] # LoL, sum of positions of data points per cluster 
+        cluster_count_totals = []*len(clusters) # list of num data points per cluster
+
+        for datum in data:
+            min_dist = sys.float_info.max
+            nearest = datum.cluster 
+            for cluster in clusters:
+                dist = get_distance(datum, cluster)
+                if dist < min_dist:
+                    min_dist = dist
+                    nearest = cluster.number
+                    
+            # nearest cluster has changed
+            if datum.cluster != nearest:
+                num_changed += 1
+                datum.cluster = nearest
+            
+            if len(cluster_pos_totals) < datum.cluster + 1:
+                cluster_pos_totals[datum.cluster] = None
+            cluster_pos_totals[datum.cluster] = \
+                [sum(pos) for pos in
+                itertools.zip_longest(datum.position, cluster_pos_totals[datum.cluster], fillvalue=0)]
+            
+            cluster_count_totals[datum.cluster] += 1
+
+        for i, cluster in enumerate(clusters):
+            mean_position = [coord/cluster_count_totals[i]
+                for coord in cluster_pos_totals[i]]
+            cluster.position = mean_position
+
+        ratio_moved = num_changed/len(data)
+
+    return data, clusters
+
 
 def main():
     args = get_args()
@@ -73,11 +118,16 @@ def main():
     data = init_data(df)
     clusters = init_clusters(k, data)
 
+    """
     for cluster in clusters:
         print(cluster.number)
         print(cluster.position)
 
     for datum in data:
         print(datum.position)
+    """
+
+    stop_ratio = 5/len(data)
+    data, clusters = kmeans(data, clusters, stop_ratio)
 
 main()
