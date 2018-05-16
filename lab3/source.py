@@ -10,21 +10,27 @@ import random
 import sys
 import numpy as np
 import itertools
+from anytree import NodeMixin, RenderTree
+from anytree.exporter import JsonExporter
 class Datum:
     def __init__(self, position, label):
         self.position = position
         self.label = label
 
-class Cluster:
-    def __init__(self, number, points):
+class Cluster(NodeMixin):
+    def __init__(self, number, points, dist, parent = None):
         self.number = number
-        self.points = points
-        self.centroid = self.get_centroid()
-        self.calc_distances()
-    
+        self.datums = points
+        self.get_points(points)
+        self.dist = dist
+        self.parent = parent
+        #self.get_centroid()
+        #self.calc_distances()
+    '''
     def get_centroid(self):
         df = pd.DataFrame(data = self.points)
-        return list(df.mean())
+        self.centroid = list(df.mean())
+        
     def calc_distances(self):
         min_d = float("inf")
         max_d = -1
@@ -42,7 +48,7 @@ class Cluster:
         self.max_dist =  max_d
         self.min_dist =  min_d
         self.sse = sse
- 
+    
     def print_info(self):
         print("Cluster ",self.number, ":")
         print("Center: ", ",".join(str(x) for x in self.centroid))
@@ -52,8 +58,13 @@ class Cluster:
         print(len(self.points), "Points:")
         for pt in self.points:
             print(",".join(str(x) for x in pt))
-    
-        
+    '''
+    def get_points(self, datums):
+        pts = []
+        for d in datums:
+            pts.append(d.position)
+        self.points = pts
+         
 def get_data(file_name):
     with open(file_name) as f:
         restrictions = get_restrictions_vector(f.readline())
@@ -84,4 +95,5 @@ def get_restrictions_vector(line):
     by_index = [i for i, value in enumerate(one_hot) if value == '1']
     label_index = [i for i, value in enumerate(one_hot) if value == '0'][0]
     return [by_index,label_index]
+
 
