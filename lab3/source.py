@@ -24,13 +24,13 @@ class Cluster(NodeMixin):
         self.get_points(points)
         self.dist = dist
         self.parent = parent
-        #self.get_centroid()
-        #self.calc_distances()
-    '''
+        self.get_centroid()
+        self.calc_distances()
+    
     def get_centroid(self):
         df = pd.DataFrame(data = self.points)
         self.centroid = list(df.mean())
-        
+    
     def calc_distances(self):
         min_d = float("inf")
         max_d = -1
@@ -52,18 +52,22 @@ class Cluster(NodeMixin):
     def print_info(self):
         print("Cluster ",self.number, ":")
         print("Center: ", ",".join(str(x) for x in self.centroid))
-        print("Max Dist. to Center: ", self.max_dist)
-        print("Min Dist. to Center: ", self.min_dist)
-        print("Avg Dist. to Center: ", self.avg_dist)
+        print("Max Dist. to Center:", self.max_dist)
+        print("Min Dist. to Center:", self.min_dist)
+        print("Avg Dist. to Center:", self.avg_dist)
+        print("SSE:", self.sse)
         print(len(self.points), "Points:")
-        for pt in self.points:
-            print(",".join(str(x) for x in pt))
-    '''
+        for i in range(len(self.points)):
+            print(",".join(str(round(x,4)) for x in self.points[i]), "Label:",self.labels[i])
+    
     def get_points(self, datums):
         pts = []
+        labels = []
         for d in datums:
             pts.append(d.position)
+            labels.append(d.label)
         self.points = pts
+        self.labels = labels
          
 def get_data(file_name):
     with open(file_name) as f:
@@ -82,11 +86,6 @@ def sq_eucledian_dist(x,y):
     sum_sq_dist= 0
     for i in range(len(x)):
         sum_sq_dist += np.power(x[i] - y[i],2)
-    #Check for the case that a cluster is being compared to itself
-    #Make the value infinite because we dont want to consider this in our
-    #min distance calculation
-    if(sum_sq_dist == 0):
-        sum_sq_dist = float("inf")
     return sum_sq_dist
 
 
