@@ -5,6 +5,7 @@ import random
 import sys
 import numpy as np
 import itertools
+from matplotlib import pyplot as plt
 
 class Datum:
 
@@ -17,6 +18,10 @@ class Cluster:
     def __init__(self, number, position):
         self.number = number
         self.position = position
+        self.min_dist = sys.float_info.max
+        self.max_dist = 0
+        self.tot_dist = 0
+        self.num_data = 0
 
 def get_distance(datum, cluster):
     datum_position = np.asarray(datum.position)
@@ -46,7 +51,6 @@ def get_args():
 
     return vars(parser.parse_args())
 
-
 def init_clusters(k, data):
     clusters = []
     positions = []
@@ -75,8 +79,8 @@ def kmeans(data, clusters, stop_ratio):
 
     while(ratio_moved > stop_ratio):
         num_changed = 0
-        cluster_pos_totals = [[]*len(clusters)] # LoL, sum of positions of data points per cluster 
-        cluster_count_totals = []*len(clusters) # list of num data points per cluster
+        cluster_pos_totals = [[] for c in clusters] # LoL, sum of positions of data points per cluster 
+        cluster_count_totals = [0 for c in clusters] # list of num data points per cluster
 
         for datum in data:
             min_dist = sys.float_info.max
@@ -92,8 +96,10 @@ def kmeans(data, clusters, stop_ratio):
                 num_changed += 1
                 datum.cluster = nearest
             
+            """
             if len(cluster_pos_totals) < datum.cluster + 1:
                 cluster_pos_totals[datum.cluster] = None
+            """
             cluster_pos_totals[datum.cluster] = \
                 [sum(pos) for pos in
                 itertools.zip_longest(datum.position, cluster_pos_totals[datum.cluster], fillvalue=0)]
@@ -109,6 +115,22 @@ def kmeans(data, clusters, stop_ratio):
 
     return data, clusters
 
+def statistics(data, clusters):
+    sse = 0
+
+    for cluster in clusters:
+        for datum in data:
+            if datum.cluster == cluster.number:
+                dist = get_distance(datum, cluster)
+                if dist > cluster.max_dist:
+                    cluster.max_dist = dist
+                if dist < cluster.min_dist:
+                    cluster.min_dist = dist
+                cluster.tot_dist += dist
+                cluster.num_data += 1
+                sse += dist*dist
+
+    return sse
 
 def main():
     args = get_args()
@@ -119,15 +141,47 @@ def main():
     clusters = init_clusters(k, data)
 
     """
-    for cluster in clusters:
-        print(cluster.number)
-        print(cluster.position)
+    ks = [k for k in range(1, min(20, len(data)-1))]
+    sse_per_k = []
+    max_sse = 0
+    for k in ks:
+        clusters = init_clusters(k, data)
+        stop_ratio = 1/len(data)
+        data, clusters = kmeans(data, clusters, stop_ratio)
+        sse = statistics(data, clusters)
+        sse_per_k.append(sse)
+        if sse > max_sse:
+            max_sse = sse
 
-    for datum in data:
-        print(datum.position)
+    plt.plot(ks, sse_per_k, 'bo')
+    plt.xlabel("Number of clusters")
+    plt.ylabel("SSE")
+    plt.axis([0, 20, 0, max_sse*(7/5)])
+    plt.show()
+
     """
-
-    stop_ratio = 5/len(data)
+    stop_ratio = 1/len(data)
     data, clusters = kmeans(data, clusters, stop_ratio)
+
+    sse = statistics(data, clusters)
+
+    print("SSE:", sse)
+
+    for cluster in clusters:
+        print("\nCluster", cluster.number)
+        print("Center:", [round(p, 2) for p in cluster.position])
+        print("Max Dist. to Center:", round(cluster.max_dist, 2))
+        print("Min Dist. to Center:", round(cluster.min_dist, 2))
+        print("Avg Dist. to Center:", round(cluster.tot_dist/cluster.num_data, 2))
+        print("Number of data in cluster:", cluster.num_data)
+        print(min(4, cluster.num_data), "Points:")
+
+        count = 0
+        for datum in data:
+            if datum.cluster == cluster.number:
+                print([round(p, 2) for p in datum.position])
+                count += 1
+                if count > 3:
+                    break;
 
 main()
