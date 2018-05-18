@@ -1,13 +1,13 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[23]:
 
 import source
 import numpy as np
 import pandas as pd
 from anytree import NodeMixin, RenderTree,PostOrderIter, ContStyle, AnyNode
-from anytree.exporter import JsonExporters
+from anytree.exporter import JsonExporter
 def cl_dist(c1, c2):
     max_dist = -1
     for pt1 in c1.datums:
@@ -182,7 +182,6 @@ def print_dendogram(node):
         print(treestr.ljust(8))
 def print_clusters(root,threshold,print_res):
     c_final = []
-    i = 0
     for node in PostOrderIter(root):
         if(node.dist < threshold and node.parent is not None and node.parent.dist > threshold):
             c_final.append(node)
@@ -193,7 +192,7 @@ def print_clusters(root,threshold,print_res):
     for node in c_final:
         if print_res:
             node.print_info()
-    
+            
     return c_final
 
 #args(filepath to data,threshhold,output file name for dendogram,boolean for printing)
@@ -214,7 +213,12 @@ def agg_main(fname,threshold,output_fn,output_res):
     return c_final
 
 
-# In[22]:
+# In[24]:
+
+#agg_main("data/AccidentsSet03.csv",16,"Accidents3.txt",True)
+
+
+# In[25]:
 
 '''
 #Code used for heat map visualization
@@ -225,9 +229,9 @@ i = 1
 x = []
 avg_avgD = []
 num_clusters = []
-while (i < 18):
+while (i < 10):
     avg_dists = []
-    f_clusters= agg_main("data/many_clusters.csv",i,"many.txt",False)
+    f_clusters= agg_main("data/4clusters.csv",i,"many.txt",False)
     for c in f_clusters:
         avg_dists.append(c.avg_dist)
     avg_avgD.append(np.mean(avg_dists))
@@ -242,8 +246,9 @@ pivot_data = df.pivot(index = "#clusters",columns = "threshold",
                               values = "avg_avgDist")
 fig = plt.figure()
 sns.heatmap(pivot_data)
-plt.title("#Average of Average Distance to Center:\nClusters vs Threshold")
+plt.title("Average of Average Distance to Center:\nClusters vs Threshold")
 plt.subplots_adjust(bottom=0.15)
 plt.show()
+
 '''
 

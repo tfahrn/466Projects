@@ -58,7 +58,8 @@ class Cluster(NodeMixin):
         print("SSE:", self.sse)
         print(len(self.points), "Points:")
         for i in range(len(self.points)):
-            print(",".join(str(round(x,4)) for x in self.points[i]), "Label:",self.labels[i])
+            if(i<3): 
+                print(",".join(str(round(x,4)) for x in self.points[i]), "Label:",self.labels[i])
     
     def get_points(self, datums):
         pts = []
