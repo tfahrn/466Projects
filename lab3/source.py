@@ -77,7 +77,10 @@ def get_data(file_name):
         df = pd.read_csv(f, header=None, skiprows=0)
         num_df = df[data_cols]
         num_df = (num_df - num_df.mean())/(num_df.std()) # normalize
-        num_df['label'] = df[label_col]
+        if(label_col == -1):
+            num_df['label'] = None
+        else:
+            num_df['label'] = df[label_col]
         return num_df
 
 #takes two arrays as parameters
@@ -92,7 +95,12 @@ def sq_eucledian_dist(x,y):
 def get_restrictions_vector(line):
     one_hot = re.split(',|\n', line)
     by_index = [i for i, value in enumerate(one_hot) if value == '1']
-    label_index = [i for i, value in enumerate(one_hot) if value == '0'][0]
+    label_index = [i for i, value in enumerate(one_hot) if value == '0']
+    #Some data sets do now have row labels/class labels
+    if(len(label_index)> 0):
+        label_index = label_index[0]
+    else:
+        label_index = -1
     return [by_index,label_index]
 
 

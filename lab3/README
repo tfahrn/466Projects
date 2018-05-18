@@ -1,2 +1,7 @@
+Imports: AnyTree, Pandas, Numpy, Itertools, Argparse, Re, Sys, Random
+
 kmeans.py
 usage: kmeans.py [-h] [-f FILENAME] [-k K]
+hclusters.py
+usage: hclustering.py <filename> [<threshold>] <dendogram filename>
+*outputs dendogram as .txt file

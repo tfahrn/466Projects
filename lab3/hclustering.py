@@ -1,14 +1,13 @@
 
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 import source
 import numpy as np
 import pandas as pd
-from anytree import NodeMixin, RenderTree,PreOrderIter,PostOrderIter, ContStyle, AnyNode
-from anytree.exporter import JsonExporter
-import json
+from anytree import NodeMixin, RenderTree,PostOrderIter, ContStyle, AnyNode
+from anytree.exporter import JsonExporters
 def cl_dist(c1, c2):
     max_dist = -1
     for pt1 in c1.datums:
@@ -141,7 +140,7 @@ def agg_clustering(df):
     dm = dist_matrix(clusters)
     #While we have more than one cluster
     i = 0
-    while(len(dm) > 1):
+    while(len(clusters) > 1):
         #Find minimum distance in the matrix
         min_res= get_min_dist(dm)
         merge_loc = min_res[0]
@@ -181,18 +180,25 @@ def print_dendogram(node):
     for pre, _, node in RenderTree(node):
         treestr = u"%s%s\t%s" % (pre, node.dist,node.number)
         print(treestr.ljust(8))
-def print_clusters(root,threshold):
+def print_clusters(root,threshold,print_res):
     c_final = []
+    i = 0
     for node in PostOrderIter(root):
         if(node.dist < threshold and node.parent is not None and node.parent.dist > threshold):
             c_final.append(node)
-    print("Number of clusters found:", len(c_final))
+    if(len(c_final) == 0):
+        c_final.append(root)
+    if print_res:
+        print("Number of clusters found:", len(c_final))
     for node in c_final:
-        node.print_info()
+        if print_res:
+            node.print_info()
+    
     return c_final
 
-#args(filepath to data,threshhold,output file name for dendogram)
-def agg_main(fname,threshold,output_fn):
+#args(filepath to data,threshhold,output file name for dendogram,boolean for printing)
+#returns number of clusters found for given threshold
+def agg_main(fname,threshold,output_fn,output_res):
     df = source.get_data(fname)
     res = agg_clustering(df)
     root = res[0][0]
@@ -200,38 +206,44 @@ def agg_main(fname,threshold,output_fn):
     #print_dendogram(root)
     exporter = JsonExporter(indent=2)
     json = exporter.export(json_root)
-    c_final = print_clusters(root,threshold)
-    fo = open(output_fn, "w")
-    fo.write(json);
-    fo.close()
+    c_final = print_clusters(root,threshold,output_res)
+    if output_res:
+        fo = open(output_fn, "w")
+        fo.write(json);
+        fo.close()
     return c_final
-    
 
 
-# In[6]:
-
-final_clusters = agg_main("data/planets.csv",3,"planet.txt")
-
-
-# In[174]:
+# In[22]:
 
 '''
-#dm = [[float('inf')],[4,float('inf')],[3,2,float('inf')],[8,7,6,float('inf')],[11,5,6,3,float('inf')]]
-#dm = [[float('inf')],[4,float('inf')],[3,2,float('inf')],[8,7,6,float('inf')],[1,5,6,3,float('inf')]]
-#dm = [[float('inf')],[4,float('inf')],[3,2,float('inf')],[8,1,6,float('inf')],[11,5,6,3,float('inf')]]
-dm = [[float('inf')],[4,float('inf')],[3,9,float('inf')],[8,7,2,float('inf')],[11,5,6,3,float('inf')]]
-while(len(dm) > 1):
-        #Find minimum distance in the matrix
-        min_res= get_min_dist(dm)
-        merge_loc = min_res[0]
-        min_dist = min_res[1]
-        #print("DM: ", dm)
-        #Merge clusters and recalculate matrix
-        print("Merge Location:",merge_loc)
-        dm = recalc_dm(merge_loc,dm)
-        print(dm)
-        break
+#Code used for heat map visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-
+i = 1
+x = []
+avg_avgD = []
+num_clusters = []
+while (i < 18):
+    avg_dists = []
+    f_clusters= agg_main("data/many_clusters.csv",i,"many.txt",False)
+    for c in f_clusters:
+        avg_dists.append(c.avg_dist)
+    avg_avgD.append(np.mean(avg_dists))
+    x.append(i)
+    num_clusters.append(len(f_clusters))
+    i+=1
+    
+df = pd.DataFrame(data=x,columns = ["threshold"])
+df['avg_avgDist'] = avg_avgD
+df['#clusters'] =  num_clusters
+pivot_data = df.pivot(index = "#clusters",columns = "threshold",
+                              values = "avg_avgDist")
+fig = plt.figure()
+sns.heatmap(pivot_data)
+plt.title("#Average of Average Distance to Center:\nClusters vs Threshold")
+plt.subplots_adjust(bottom=0.15)
+plt.show()
 '''
 
