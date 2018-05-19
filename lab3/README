@@ -1,7 +1,27 @@
-Imports: AnyTree, Pandas, Numpy, Itertools, Argparse, Re, Sys, Random
+Thomas Fahrner and James Abundis
+tfahrner@calpoly.edu and jlabundi@calpoly.edu
+
+Imports: AnyTree, Pandas, Numpy, Itertools, Argparse, Re, mpl_toolkits.mplot3d, matplotlib 
 
 kmeans.py
-usage: kmeans.py [-h] [-f FILENAME] [-k K]
+usage: kmeans.py [-h] -f FILENAME -k K 
+-f: path to .csv data file (eg. data/AccidentsSet03.csv)
+-k: number of clusters (eg. 3)
+
 hclusters.py
-usage: hclustering.py <filename> [<threshold>] <dendogram filename>
-*outputs dendogram as .txt file
+usage: hclustering.py [-h] -f FILENAME -t THRESHOLD -o OUT -b BOOLEAN
+-f: path to .csv data file (eg. data/AccidentsSet03.csv)
+-t: threshold (eg. 16)
+-o: path to output file to write dendrogram (eg. Accidents3.txt)
+-b: if you want to print output (eg. True)
+
+dbscan.py
+usage: dbscan.py [-h] -f FILENAME -e EPSILON -n NUM
+-f: path to .csv data file (eg. data/AccidentsSet03.csv)
+-e: epsilon for clusters
+-n: min_points for clusters
+
+visualize.py
+usage: visualize.py [-h] -f FILENAME
+-f: path to .csv data file (eg. data/AccidentsSet03.csv)
+Visualizes 2d/3d data

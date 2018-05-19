@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 from anytree import NodeMixin, RenderTree,PostOrderIter, ContStyle, AnyNode
 from anytree.exporter import JsonExporter
+import argparse
+
 def cl_dist(c1, c2):
     max_dist = -1
     for pt1 in c1.datums:
@@ -195,9 +197,25 @@ def print_clusters(root,threshold,print_res):
             
     return c_final
 
+def get_args():
+    parser = argparse.ArgumentParser(description='hierarchical clustering')
+    parser.add_argument('-f', '--filename', help='.csv data file', required=True)
+    parser.add_argument('-t', '--threshold', help='threshold value', required=True)
+    parser.add_argument('-o', '--out', help='output file', required=True)
+    parser.add_argument('-b', '--boolean', help='True/False print output', required=True)
+
+    return vars(parser.parse_args())
+
+
 #args(filepath to data,threshhold,output file name for dendogram,boolean for printing)
 #returns number of clusters found for given threshold
-def agg_main(fname,threshold,output_fn,output_res):
+def agg_main():
+    args = get_args()
+    fname = args['filename']
+    threshold = int(args['threshold'])
+    output_fn = args['out']
+    output_res = (args['boolean'] == 'True')
+
     df = source.get_data(fname)
     res = agg_clustering(df)
     root = res[0][0]
@@ -213,12 +231,9 @@ def agg_main(fname,threshold,output_fn,output_res):
     return c_final
 
 
-# In[24]:
+if __name__=='__main__':
+    agg_main()
 
-#agg_main("data/AccidentsSet03.csv",16,"Accidents3.txt",True)
-
-
-# In[25]:
 
 '''
 #Code used for heat map visualization
