@@ -4,6 +4,9 @@ imports:
    string
    stemmer
    math
+   numpy
+   itertools
+   heapq
 
 textVectorizer.py:
    usage: textVectorizer.py [-h] -d DIR -o OUTPUT -g GROUND
