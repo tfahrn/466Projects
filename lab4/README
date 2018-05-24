@@ -1,0 +1,15 @@
+imports:
+   argparse
+   os
+   string
+   stemmer
+   math
+
+textVectorizer.py:
+   usage: textVectorizer.py [-h] -d DIR -o OUTPUT -g GROUND
+
+stemmer.py:
+   Porter Stemming Algorithm; used as module by textVectorizer.py
+
+stopwords.txt:
+   Text file containing stopwords; used for stopword removal by textVectorizer.py

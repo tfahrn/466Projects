@@ -1,107 +1,160 @@
-
-# coding: utf-8
-
-# In[87]:
-
-import numpy as np
-import sys
+import argparse
 import os
 import string
-import source
+import stemmer
 import math
 
+"""
+TODO:
+    normalization?
 
-# In[99]:
+"""
+
 
 class Vector:
-    def __init__(self,tfs,threshold):
-        self.tfs = tfs
-        #self.filter_freqs(threshold)
-        self.normalize()
-    def filter_freqs(self,t):
-        for tf in list(self.tfs.keys()):
-            if self.tfs[tf] > t:
-                del self.tfs[tf]
-    def normalize(self):
-        max_val = np.max(list(self.tfs.values()))
-        for t in list(self.tfs.keys()):
-            self.tfs[t] = self.tfs[t]/max_val
-    def calc_weights(self,word_bag):
-        wIJ_dict = {}
-        n = len(word_bag)
-        for tf in list(self.tfs.keys()):
-            df_i = word_bag[tf]
-            w_ij = self.tfs[tf] * math.log((n/df_i),2)
-            wIJ_dict[tf] = w_ij
-        self.weights = wIJ_dict
-    #def cosine():
+    def __init__(self, filename, author, tf, threshold):
+        self.filename = filename
+        self.author = author
+        self.tf = tf
+        self.tf_idf = {} 
+        self.threshold = threshold
+
+
+# constructs tf_idf {word : tf-idf} for each vector using vector.tf and vocab
+def set_tf_idfs(vectors, vocab, num_docs):
+    # threshold and normalize each vector
+    for vector in vectors:
+        for word, freq in vector.tf.items():
+            if vector.threshold > 0 and vector.tf[word] > vector.threshold:
+                vector.tf[word] = vector.threshold
+        max_freq_word = max(vector.tf, key=lambda freq: vector.tf[freq])
+        max_freq = vector.tf[max_freq_word]
+        for word, freq in vector.tf.items():
+            vector.tf[word] = freq/max_freq
+
+    for word, doc_freq in vocab.items():
+        idf = math.log(num_docs/vocab[word], 2)
+
+        for vector in vectors:
+            if word in vector.tf:
+                vector.tf_idf[word] = vector.tf[word] * idf 
+            else:
+                vector.tf_idf[word] = 0
+
+
+def get_args():
+    parser = argparse.ArgumentParser(description='tf-idf vectorizer')
+    parser.add_argument('-d', '--dir', help='root of 50-50 dataset directory', required=True)
+    parser.add_argument('-o', '--output', help='name of output file for tf-idf representations', required=True)
+    parser.add_argument('-g', '--ground', help='name of output file for ground truth', required=True)
+    parser.add_argument('-s', '--stem', help='boolean; whether to include stemming in preprocessing', required=True)
+    parser.add_argument('-r', '--remove', help='boolean; whether to remove stop words in preprocessing', required=True)
+    parser.add_argument('-t', '--threshold', help='integer; threshold value for term frequency; enter 0 to not use a threshold', required=True)
+
+    return vars(parser.parse_args())
+
+
+# creates mapping of {txt_file_path : author}
+# writes ground truth to filename in format 'txt_file_name, author'
+# returns map
+def write_ground_truth(root_path, filename):
+    path_to_author = {}
+
+    for data_dir in os.scandir(root_path):
+        if not data_dir.name.startswith('.'):
+            for author_dir in os.scandir(data_dir.path):
+                if not author_dir.name.startswith('.'):
+                    for news_file in os.scandir(author_dir.path):
+                        if not news_file.name.startswith('.'):
+                            path_to_author[news_file.path] = author_dir.name
+
+    with open(filename, 'w') as ground_truth_file:
+        for txt_file_path, author in path_to_author.items():
+            txt_file_name = os.path.basename(txt_file_path)
+            print('{},{}'.format(txt_file_name, author), file=ground_truth_file)
+
+    return path_to_author
+
+
+# returns set of stopwords
+def get_stopwords():
+    with open('stopwords.txt', 'r') as file:
+        stopwords = {word for line in file for word in line.split()}
+
+    return stopwords
+
+# creates, returns tf {term : frequency} of words in file_path 
+def file_to_tf(file_path, to_stem, to_remove):
+    tf = {}
+
+    if to_remove:
+        stopwords = get_stopwords()
+
+    with open(file_path, 'r', encoding='utf8', errors='ignore') as file:
+        for line in file:
+            for word in line.split():
+                word = (word.strip(string.punctuation)).lower()
+
+                if word.isnumeric() or word.isdigit():
+                    continue
+
+                if to_remove:
+                    if word in stopwords:
+                        continue
+                    
+                if to_stem:
+                    porter_stemmer = stemmer.PorterStemmer()
+                    word = porter_stemmer.stem(word, 0, len(word)-1)
+
+                if word in tf:
+                    tf[word] += 1
+                else:
+                    tf[word] = 1
+
+    return tf
+
+
+# iterates through each file in path_to_author, constructing vocab {term : corpus_freq} and a vector for each file
+# defines tf-idf of each vector
+# returns vocab, list of all vectors
+def tf_idf(path_to_author, to_stem, to_remove, threshold):
+    vocab = {}
+    vectors = []
+
+    for txt_file_path, author in path_to_author.items():
+        txt_file_name = os.path.basename(txt_file_path)
+        tf = file_to_tf(txt_file_path, to_stem, to_remove)
+
+        for word, freq in tf.items():
+            if word in vocab:
+                vocab[word] += freq
+            else:
+                vocab[word] = freq
         
-    #def okapi():
+        vector = Vector(txt_file_name, author, tf, threshold)
+        vectors.append(vector)
+
+    set_tf_idfs(vectors, vocab, len(path_to_author))
+
+    return vocab, vectors
 
 
-# In[42]:
+def main():
+    args = get_args()
+    root_path = args['dir']
+    output_file = args['output']
+    ground_file = args['ground']
+    to_stem = True if args['stem']=='True' else False
+    to_remove = True if args['remove']=='True' else False
+    threshold = int(args['threshold'])
 
-def get_stopwords(fp,length):
-    stop_words = {}
-    sf = open(fp + "stopwords-" + length +".txt","r")
-    for sw in sf:
-        sw = sw.rstrip("\n\r") 
-        stop_words[sw] = sw
-    sf.close()
-    return stop_words
-#Returns a word bag containing all unique terms from our document collection
-#Also returns our document Vector objects containing normalized term 
-#frequencies
-def vectorize(path,sw_length,threshold):
-    p = source.PorterStemmer()
-    folders = os.listdir(path)
-    sw_dict = get_stopwords("data/",sw_length)
-    translator = str.maketrans('', '', string.punctuation)
-    word_bag = {}
-    docs = []
-    
-    for f in folders:
-        fold_path =  path + f + "/" 
-        tfiles = os.listdir(fold_path)
-        #Go through every document
-        for tf_name in tfiles:
-            tf = open(fold_path + tf_name,"r")
-            term_freqs = {}
-            for line in tf:
-                words = line.split()
-                for w in words:
-                    #remove trailing newlines and lower case the term
-                    w = w.rstrip("\n\r").lower()
-                    #remove punctuation
-                    w = w.translate(translator)
-                    #stem the term
-                    w = p.stem(w, 0,len(w)-1)
-                    #Add term to word bag and document class freq idx
-                    if(w not in sw_dict and len(w) > 0):  
-                        if w not in term_freqs:
-                            term_freqs[w] = 1
-                            #check if term is in global vocab, if not add to word bag
-                            if w not in word_bag:
-                                word_bag[w] = 1
-                            #increment # of doucements that contain this term
-                            else:
-                                word_bag[w] +=1
-                        else:
-                            term_freqs[w] += 1           
-            tf.close()
-            docs.append(Vector(term_freqs,threshold))    
-    return [word_bag,docs]
-#Goes through every vector object and calculates the TF-IDF weight with the word_bag dict-> contains # of docs
-#a term occurs in. Also has the list of vector objects with the tf-ij values.
-def w_terms(word_bag,docs):
-    for d in docs:
-        d.calc_weights(word_bag)
+    path_to_author = write_ground_truth(root_path, ground_file)
+    vocab, vectors = tf_idf(path_to_author, to_stem, to_remove, threshold)
+    #file_to_tf('data/C50/C50train/JoWinterbottom/144390newsML.txt', to_stem, to_remove)
+
+    for vector in vectors:
+        print(vector.tf_idf)
 
 
-# In[101]:
-
-res = vectorize("data/c50train/","long",6)
-word_bag =  res[0]
-docs = res[1]
-w_terms(word_bag,docs)
-
+if __name__ == '__main__':
+    main()
