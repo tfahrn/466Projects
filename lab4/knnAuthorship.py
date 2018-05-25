@@ -3,7 +3,6 @@ import json
 import itertools
 from heapq import heappush, heappop
 import numpy as np
-import csv
 
 
 def get_args():
