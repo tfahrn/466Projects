@@ -18,8 +18,8 @@ stemmer.py:
 stopwords.txt:
    Text file containing stopwords; used for stopword removal by textVectorizer.py
 
-hclusteringPredictions.py:
-   python hclustering.py 
+clusteringAuthorship.py:
+   python clusteringAuthorship.py 
       -f1 <file with doc name, author> 
       -f2 <file with tf_idf vectors for each document>
       -t threshold
