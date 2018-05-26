@@ -42,6 +42,8 @@ classifierEvaluation.py:
 
    Writes statistics(including confusion matrix) to stdout; can be piped to file
 
+   Output file submitted with statistics: k5eval.out
+
 clusteringAuthorship.py:
    python clusteringAuthorship.py 
       -f1 <file with doc name, author> 
