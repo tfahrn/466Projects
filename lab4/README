@@ -10,13 +10,37 @@ imports:
    anytree
 
 textVectorizer.py:
-   usage: textVectorizer.py [-h] -d DIR -o OUTPUT -g GROUND
+   usage: textVectorizer.py [-h] -d DIR -o OUTPUT -g GROUND -s STEM -r REMOVE -t THRESHOLD
+
+   DIR: directory of data files (eg. data/C50/)
+   OUTPUT: file to write vectorizations to (eg. vectors.txt)
+   GROUND: file to write ground truth to (eg. ground_truth.txt)
+   STEM: True/False to include stemming (eg. True)
+   REMOVE: True/False to include stopword removal (eg. True)
+   THRESHOLD: threshold used for tf-idf, 0 for no threshold (eg. 0)
 
 stemmer.py:
    Porter Stemming Algorithm; used as module by textVectorizer.py
 
 stopwords.txt:
    Text file containing stopwords; used for stopword removal by textVectorizer.py
+
+knnAuthorship.py:
+   usage: knnAuthorship.py [-h] -v VECTORS -g GROUND -k K  
+
+   VECTORS: file with vectorizations (eg. vectors.txt)
+   GROUND: file with ground truth (eg. ground_truth.txt)
+   K: k value used for KNN   
+
+   Writes predictions to stdout; can be piped to file
+
+classifierEvaluation.py:
+   usage: classifierEvaluation.py [-h] -p PRED -g GROUND
+
+   PRED: file with predictions (eg. k5_preds.txt)
+   GROUND: file with ground truth (eg. ground_truth.txt)
+
+   Writes statistics(including confusion matrix) to stdout; can be piped to file
 
 clusteringAuthorship.py:
    python clusteringAuthorship.py 

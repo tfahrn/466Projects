@@ -117,12 +117,14 @@ def main():
     print("Number of documents with incorrectly predicted documents:", num_inc)
 
     for author in author_objects:
-        print("Name: {:20}\tHits: {}\tStrikes: {}\tMisses: {}\tPrecision: {}\tRecall: {}\tF1: {}".format(author.name, author.hits, author.strikes, author.misses, author.precision, author.recall, author.f1))
+        author.calc_stats()
+        print("Name: {:20}\tHits: {}\tStrikes: {}\tMisses: {}\tPrecision: {:4}\tRecall: {:4}\tF1: {:4}".format(author.name, author.hits, author.strikes, author.misses, round(author.precision, 3), round(author.recall, 3), round(author.f1, 3)))
 
     author_names = [a.name for a in author_objects]
     print(author_names)
     for row in matrix:
         print(row)
+
 
 if __name__ == '__main__':
     main()
