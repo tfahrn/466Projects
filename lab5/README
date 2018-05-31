@@ -1,0 +1,3 @@
+pageRank.py
+usage: pageRank.py [-h] -f FILENAME
+-f: path to data file (.csv for small datasets, .txt for snap datasets)
