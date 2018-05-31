@@ -14,7 +14,6 @@ class Graph:
         self.last_rank = None
         self.next_rank = None
 
-
     def construct_small(self, file):
         with open(file) as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -117,14 +116,22 @@ class Graph:
 def get_args():
     parser = argparse.ArgumentParser(description='PageRank')
     parser.add_argument('-f', '--filename', help='path to input file', required=True)
+    parser.add_argument('-o', '--output', help='path our output file', required=True)
 
     return vars(parser.parse_args())
 
+def to_file(f_name,results,stats):
+    f = open(f_name,"w")
+    f.write(stats)
+    for r in results:
+        f.write(r[0] + " with pagerank: " + str(r[1]) + "\n")
+    f.close()
 
 def main():
     start_time = time.time()
     args = get_args()
     filename = args['filename']
+    output = args['output']
     is_snap = filename.endswith('.txt')
 
     graph = Graph() 
@@ -139,14 +146,16 @@ def main():
     node_to_rank, num_iterations = graph.page_rank(0.5, 100)
 
     processing_time = time.time() - start_time
-
+    stats = "Read time: " + str(round(read_time, 2)) + " Processing time: " + str(round(processing_time, 2))
+    stats =  stats + " Number of iterations: " +  str(num_iterations) + "\n"
+    
     print("Read time: {}. Processing time: {}. Number of iterations: {}".format(round(read_time, 2), round(processing_time, 2), num_iterations))
 
     results = [(node, rank) for node, rank in node_to_rank.items()]
     results.sort(key=lambda t:t[1], reverse=True)
 
     print(results[:5])
-
+    to_file(output,results,stats)
 
 if __name__ == '__main__':
     main()
