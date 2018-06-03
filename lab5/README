@@ -1,7 +1,10 @@
 pageRank.py
-usage: pageRank.py [-h] -f FILENAME
+usage: pageRank.py [-h] -f FILENAME -o OUTPUT
 -f: path to data file (.csv for small datasets, .txt for snap datasets)
+-o: path to output file
 
-
-Need to find optimal d/epsilon values for each dataset.
-
+Imports:
+argparse
+csv
+numpy
+time

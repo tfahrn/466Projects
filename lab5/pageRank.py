@@ -53,34 +53,6 @@ class Graph:
                 self.matrix[self.nodes[node1], self.nodes[node2]] = 1 
                 self.matrix[self.nodes[node2], self.nodes[node1]] = 1
 
-
-    def construct_snap(self, file):
-        with open(file) as f:
-            for line in f:
-                if line.startswith('#'):
-                    continue
-                else:
-                    edge = line.split('\t')
-                    node1 = edge[0]
-                    node2 = edge[1]
-
-                    if node1 not in self.nodes:
-                        self.N += 1
-                        self.nodes[node1] = self.N - 1
-                    if node2 not in self.nodes:
-                        self.N += 1
-                        self.nodes[node2] = self.N - 1
-
-                    self.edges.append(edge)
-
-        self.matrix = np.zeros((self.N, self.N))
-
-        for edge in self.edges:
-            node1 = edge[0]
-            node2 = edge[1]
-            self.matrix[self.nodes[node1], self.nodes[node2]] = 1 
-
-
     def page_rank(self, d, epsilon):
         self.old_rank = np.zeros(self.N)
         self.new_rank = np.zeros(self.N) 
@@ -130,8 +102,8 @@ def construct_snap(file):
                 continue
             else:
                 edge = line.split('\t')
-                from_name = edge[0]
-                to_name = edge[1]
+                from_name = edge[0].strip('\n')
+                to_name = edge[1].strip('\n')
                 from_node = Node(from_name)
                 to_node = Node(to_name)
 
@@ -207,12 +179,12 @@ def main():
         name_to_node = construct_snap(filename)
         read_time = time.time() - start_time
         start_time = time.time()
-        node_to_rank, num_iterations = page_rank_snap(name_to_node, 0.9, 100)
+        node_to_rank, num_iterations = page_rank_snap(name_to_node, 0.9, 1)
     else:
         graph.construct_small(filename)
         read_time = time.time() - start_time
         start_time = time.time()
-        node_to_rank, num_iterations = graph.page_rank(0.9, 100)
+        node_to_rank, num_iterations = graph.page_rank(0.9, 1000)
 
     processing_time = time.time() - start_time
 
