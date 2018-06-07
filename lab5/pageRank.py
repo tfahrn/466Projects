@@ -53,34 +53,6 @@ class Graph:
                 self.matrix[self.nodes[node1], self.nodes[node2]] = 1 
                 self.matrix[self.nodes[node2], self.nodes[node1]] = 1
 
-
-    def construct_snap(self, file):
-        with open(file) as f:
-            for line in f:
-                if line.startswith('#'):
-                    continue
-                else:
-                    edge = line.split('\t')
-                    node1 = edge[0]
-                    node2 = edge[1]
-
-                    if node1 not in self.nodes:
-                        self.N += 1
-                        self.nodes[node1] = self.N - 1
-                    if node2 not in self.nodes:
-                        self.N += 1
-                        self.nodes[node2] = self.N - 1
-
-                    self.edges.append(edge)
-
-        self.matrix = np.zeros((self.N, self.N))
-
-        for edge in self.edges:
-            node1 = edge[0]
-            node2 = edge[1]
-            self.matrix[self.nodes[node1], self.nodes[node2]] = 1 
-
-
     def page_rank(self, d, epsilon):
         self.old_rank = np.zeros(self.N)
         self.new_rank = np.zeros(self.N) 
@@ -90,6 +62,7 @@ class Graph:
         num_iterations = 0
         while(num_iterations < epsilon):
         # while(abs(np.sum(self.new_rank - self.old_rank)) > epsilon):
+            print("Iteration:", num_iterations)
             num_iterations += 1
             for i in range(self.N):
                 random_term = (1-d)*(1/self.N)
@@ -113,12 +86,78 @@ class Graph:
         return node_to_rank, num_iterations
 
 
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.num_out = 0
+        self.in_node_names = set() 
+
+
+def construct_snap(file):
+    name_to_node = {}
+
+    with open(file) as f:
+        for line in f:
+            if line.startswith('#'):
+                continue
+            else:
+                edge = line.split('\t')
+                from_name = edge[0].strip('\n')
+                to_name = edge[1].strip('\n')
+                from_node = Node(from_name)
+                to_node = Node(to_name)
+
+                if from_name in name_to_node:
+                    name_to_node[from_name].num_out += 1
+                else:
+                    from_node.num_out = 1
+                    name_to_node[from_name] = from_node
+
+                if to_name in name_to_node:
+                    name_to_node[to_name].in_node_names.add(from_name)
+                else:
+                    to_node.in_node_names.add(from_name)
+                    to_node.num_out = 0
+                    name_to_node[to_name] = to_node
+
+    return name_to_node
+
+
+def page_rank_snap(name_to_node, d, epsilon):
+    num_nodes = len(name_to_node)
+
+    old_rank = {}
+    new_rank = {}
+
+    for name in name_to_node:
+        old_rank[name] = 1/num_nodes
+
+    num_iterations = 0
+    while(num_iterations < epsilon):
+        print("Iteration:", num_iterations)
+        num_iterations += 1
+        for name in name_to_node:
+            node = name_to_node[name]
+            random_term = (1-d)*(1/num_nodes)
+            incoming_sum = 0
+            for in_name in node.in_node_names:
+                in_node = name_to_node[in_name]
+                page_rank_in_node = old_rank[in_name]
+                incoming_sum += (1/in_node.num_out)*page_rank_in_node
+            incoming_term = d*incoming_sum
+
+            new_rank[name] = random_term + incoming_term
+
+    return new_rank, num_iterations
+
+
 def get_args():
     parser = argparse.ArgumentParser(description='PageRank')
     parser.add_argument('-f', '--filename', help='path to input file', required=True)
-    parser.add_argument('-o', '--output', help='path our output file', required=True)
+    parser.add_argument('-o', '--output', help='path to an output file', required=True)
 
     return vars(parser.parse_args())
+
 
 def to_file(f_name,results,stats):
     f = open(f_name,"w")
@@ -126,6 +165,7 @@ def to_file(f_name,results,stats):
     for r in results:
         f.write(r[0] + " with pagerank: " + str(r[1]) + "\n")
     f.close()
+
 
 def main():
     start_time = time.time()
@@ -136,16 +176,18 @@ def main():
 
     graph = Graph() 
     if is_snap:
-        graph.construct_snap(filename)
+        name_to_node = construct_snap(filename)
+        read_time = time.time() - start_time
+        start_time = time.time()
+        node_to_rank, num_iterations = page_rank_snap(name_to_node, 0.9, 1)
     else:
         graph.construct_small(filename)
-
-    read_time = time.time() - start_time
-    start_time = time.time()
-
-    node_to_rank, num_iterations = graph.page_rank(0.5, 100)
+        read_time = time.time() - start_time
+        start_time = time.time()
+        node_to_rank, num_iterations = graph.page_rank(0.9, 1000)
 
     processing_time = time.time() - start_time
+
     stats = "Read time: " + str(round(read_time, 2)) + " Processing time: " + str(round(processing_time, 2))
     stats =  stats + " Number of iterations: " +  str(num_iterations) + "\n"
     
@@ -156,6 +198,7 @@ def main():
 
     print(results[:5])
     to_file(output,results,stats)
+
 
 if __name__ == '__main__':
     main()
