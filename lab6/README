@@ -1,3 +1,7 @@
+Team Members:  
+James Abundis and Thomas Fahrner
+
+
 Implementation:
 We implement three methods for collaborative filtering:
 Mean Utility
@@ -25,5 +29,3 @@ usage: EvaluateCFList.py [-h] -f FILEPATH -m METHOD -t TESTFILEPATH
 TESTFILEPATH is the path to the test csv  
 
 eg. python3 EvaluateCFList.py -f data/jester-data-1.csv -m weighted -t data/test1.csv
-
-
