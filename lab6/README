@@ -1,0 +1,14 @@
+TODO:
+set arg param for corr_matrix.txt
+internally represent corr_matrix so no need to recompute each run
+implement weighted sum
+implement knn weighted sum
+evaluation
+
+Implementation:
+We implement three methods for collaborative filtering:
+Mean Utility
+Weighted Sum
+KNN Weighted Sum
+
+We use Pearson Correlation for the similarity metric.
