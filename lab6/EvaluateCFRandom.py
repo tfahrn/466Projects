@@ -43,7 +43,7 @@ def predict(method_name, test_case, source_user_ids, matrix, jokes, users,
         prediction = Filter.predict_weighted_sum(matrix, jokes, users, corr_matrix,
                                                  test_case[0], test_case[1])
     else:
-        k = 4
+        k = 1000 
         userId_to_knn = Filter.get_knn(corr_matrix, k, source_user_ids)
         prediction = Filter.predict_knn_weighted_sum(matrix, jokes, users,
                                                      corr_matrix, userId_to_knn,
