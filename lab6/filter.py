@@ -115,8 +115,6 @@ def get_knn(corr_matrix, k, source_user_ids):
         # remove self (perfect correlation)
         user_to_knn[userId] = sorted_neighbors[1:]
 
-        print("found neighbors for userId:", userId)
-
     return user_to_knn
 
 
