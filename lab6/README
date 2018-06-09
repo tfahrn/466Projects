@@ -2,6 +2,6 @@ Implementation:
 We implement three methods for collaborative filtering:
 Mean Utility
 Weighted Sum
-KNN Weighted Sum
+KNN Weighted Sum (k=1000)
 
 We use Pearson Correlation for the similarity metric.
