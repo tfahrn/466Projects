@@ -1,0 +1,32 @@
+Team Members:  
+James Abundis and Thomas Fahrner
+jlabundi@calpoly.edu and tfahrner@calpoly.edu
+
+
+Implementation:
+We implement three methods for collaborative filtering:
+Mean Utility
+Weighted Sum
+KNN Weighted Sum (k=1000)
+
+We use Pearson Correlation for the similarity metric.
+
+
+Filter.py:
+Module that contains classes/methods for collaborative filtering.
+
+EvaluateCFRandom.py
+usage: EvaluateCFRandom.py [-h] -f FILEPATH -m METHOD -s SIZE -r REPEATS  
+FILEPATH is the path to the user/item file
+METHOD is one of: 'mean', 'weighted', 'knn'  
+SIZE is the number of samples per run  
+REPEATS is the number of runs  
+
+eg. python3 EvaluateCFRandom.py -f data/jester-data-1.csv -m knn -s 5 -r 3 
+
+
+EvaluateCFList.py
+usage: EvaluateCFList.py [-h] -f FILEPATH -m METHOD -t TESTFILEPATH  
+TESTFILEPATH is the path to the test csv  
+
+eg. python3 EvaluateCFList.py -f data/jester-data-1.csv -m weighted -t data/test1.csv
