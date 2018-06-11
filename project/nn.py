@@ -1,7 +1,8 @@
 import numpy as np
 from keras import models
 from keras import layers
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def get_data():
     data = np.loadtxt(open('data/encoded_data.csv', "rb"), delimiter=",")
@@ -18,8 +19,9 @@ def get_data():
 
 def main():
     total_results = 0
+    accuracies = []
 
-    for i in range(50):
+    for i in range(100):
         train_data, train_labels, test_data, test_labels = get_data()
 
         model = models.Sequential()
@@ -31,18 +33,20 @@ def main():
                       loss='categorical_crossentropy',
                       metrics=['accuracy'])
 
-        history = model.fit(train_data, train_labels, epochs=20, batch_size=8)
+        history = model.fit(train_data, train_labels, epochs=20, batch_size=8, verbose=0)
         results = model.evaluate(test_data, test_labels)
 
+        accuracies.append(results[1])
         total_results += results[1]
 
-    print(total_results/50)
+    print(total_results/100)
 
-    
-
-
-
-
+    sns.set_style('whitegrid')
+    sns.distplot(accuracies, kde=False, rug=True)
+    plt.title("Neural Network Classification of Turkey Political Parties")
+    plt.xlabel("Classification Accuracy")
+    plt.ylabel("Density over 100 Trials")
+    plt.show()
 
 
 if __name__ == '__main__':
