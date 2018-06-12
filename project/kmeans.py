@@ -9,11 +9,11 @@ def get_data():
 
     return data
 
-
 def main():
+    
     data = get_data()
     sse = {}
-
+    
     for k in range(2, 10):
         kmeans = KMeans(n_clusters=k).fit(data)
         labels = kmeans.labels_
@@ -29,9 +29,11 @@ def main():
     plt.ylabel("SSE")
     plt.show()
     """
-
-
+def main_p(k):
+    data = get_data()
+    kmeans = KMeans(n_clusters=k).fit(data)
+    clusters = kmeans.labels_
+    return clusters
     
-
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+   # main()

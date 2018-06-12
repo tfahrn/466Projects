@@ -11,9 +11,10 @@ def get_data():
 
 
 def main():
+    
     data = get_data()
     sse = {}
-
+     
     for k in range(2, 10):
         agg = AgglomerativeClustering(n_clusters=k, linkage='average').fit(data)
         labels = agg.labels_
@@ -29,9 +30,12 @@ def main():
     plt.ylabel("SSE")
     plt.show()
     """
-
-
-    
+#main function used or analysis    
+def main_p(k):
+    data = get_data()
+    agg = AgglomerativeClustering(n_clusters=k,linkage='average').fit(data)
+    labels = agg.labels_
+    return labels
 
 if __name__ == '__main__':
     main()
