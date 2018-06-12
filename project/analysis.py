@@ -1,14 +1,9 @@
-
-# coding: utf-8
-
-# In[10]:
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import kmeans
 import agglomerative
-sex = {"Erkek":1,"Kadın":0}
+sex = {"Erkek":"Male","Kadın":"Female"}
 education = {"Lise":"High School","Lisans":"Bachelors Degree",
              "Ön Lisans":"Associates Degree",
             "Ortaokul":"Middle School","İlkokul":"Primary School",
@@ -98,6 +93,27 @@ def region_graph(data):
     plt.title("Regions of Turkey")
     plt.savefig("ground_truth/regions_pie.jpg")
     plt.clf()
+
+def sex_cluster_graph(data,cluster,t):
+    sex_counts = data[["Sex","Timestamp"]].groupby("Sex").count()
+    sex_counts.rename(columns={"Timestamp":"count"},inplace=True)
+    sex_counts.reset_index(inplace=True)
+
+    plt.pie(sex_counts["count"], labels=sex_counts['Sex'], autopct='%1.1f%%', shadow=True)
+    plt.title(t+"-Sex-Cluster: " +str(cluster))
+    plt.savefig("results/sex_pie_c"+str(cluster)+t+".jpg")
+    plt.clf()
+    
+def sex_graph(data):
+    sex_counts = data[["Sex","Timestamp"]].groupby("Sex").count()
+    sex_counts.rename(columns={"Timestamp":"count"},inplace=True)
+    sex_counts.reset_index(inplace=True)
+
+    plt.pie(sex_counts["count"], labels=sex_counts['Sex'], autopct='%1.1f%%', shadow=True)
+    plt.title("Sex")
+    plt.savefig("ground_truth/sex_pie.jpg")
+    plt.clf()
+    
     
 def region_cluster_graph(data,cluster,t):
     area_counts = data[["Area","Timestamp"]].groupby("Area").count()
@@ -120,7 +136,7 @@ def questions_graph(q_ratios,t):
     plt.ylabel("Ratio of Yes/No")
     plt.title(t+"-Ratio of Yes/No vs Question")
     plt.savefig("results/questions_"+t+".jpg")
-    plt.clf
+    plt.clf()
 
 def get_data():
     colnames = ["Timestamp","Sex","Age","Area","Education","Q1","Q2","Q3","Q4"
@@ -137,6 +153,7 @@ def pre_analysis():
     age_graph(data)
     region_graph(data)
     party_graph(data)
+    sex_graph(data)
     
 def q_numeric(data):
     questions = ["Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10"]
@@ -163,6 +180,7 @@ def run_kmean_stats():
         party_cluster_graph(sub_data,i,"kmeans")
         educ_cluster_graph(sub_data,i,"kmeans")
         region_cluster_graph(sub_data,i,"kmeans")
+        sex_cluster_graph(sub_data,i,"kmeans")
 
         yes_to_no = []
         n = len(sub_data)
@@ -191,6 +209,7 @@ def run_agglom_stats():
         party_cluster_graph(sub_data,i,"agglom")
         educ_cluster_graph(sub_data,i,"agglom")
         region_cluster_graph(sub_data,i,"agglom")
+        sex_cluster_graph(sub_data,i,"agglom")
 
         yes_to_no = []
         n = len(sub_data)
@@ -209,4 +228,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
