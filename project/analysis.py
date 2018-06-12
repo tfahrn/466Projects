@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[6]:
+# In[10]:
 
 import pandas as pd
 import numpy as np
@@ -120,6 +120,7 @@ def questions_graph(q_ratios,t):
     plt.ylabel("Ratio of Yes/No")
     plt.title(t+"-Ratio of Yes/No vs Question")
     plt.savefig("results/questions_"+t+".jpg")
+    plt.clf
 
 def get_data():
     colnames = ["Timestamp","Sex","Age","Area","Education","Q1","Q2","Q3","Q4"
@@ -129,7 +130,8 @@ def get_data():
     data["Education"] = data['Education'].apply(conv_educ)
     return data
 
-def pre_analysis(data):
+def pre_analysis():
+    data = get_data()
     #Graph ground truth for pre analysis
     educ_graph(data)
     age_graph(data)
@@ -143,7 +145,6 @@ def q_numeric(data):
         data[q] = data[q].apply(conv_qs)
 def run_kmean_stats():
     data = get_data()
-    pre_analysis(data)
     '''
     #One hot encode are categorical variables
     data = pd.get_dummies(data,prefix=["age","educ","area"],columns=["Age","Education","Area"])
@@ -172,7 +173,6 @@ def run_kmean_stats():
     
 def run_agglom_stats():
     data = get_data()
-    pre_analysis(data)
     '''
     #One hot encode are categorical variables
     data = pd.get_dummies(data,prefix=["age","educ","area"],columns=["Age","Education","Area"])
@@ -203,6 +203,7 @@ def run_agglom_stats():
     questions_graph(q_ratios,"agglom")
     
 def main():
+    pre_analysis()
     run_kmean_stats()
     run_agglom_stats()
 
